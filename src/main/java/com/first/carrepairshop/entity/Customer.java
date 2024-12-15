@@ -27,10 +27,11 @@ public class Customer {
     private String email;
     private String phone;
     private String address;
-   @OneToMany(mappedBy = "customer")
-    private   List<Invoice> invoices;
 
-    @OneToMany( mappedBy = "customer")
-    protected List<Car>  car;
+    @OneToMany(mappedBy = "customer")
+    private List<Invoice> invoices;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Car> car;
 
 }

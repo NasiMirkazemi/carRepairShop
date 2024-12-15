@@ -1,12 +1,11 @@
 package com.first.carrepairshop.controller;
 
+import com.first.carrepairshop.dto.CarDto;
+import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/carController")
@@ -14,13 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class CarController {
     private final CarService carService;
 
-    @GetMapping("/echo/{msg}")
-    public ResponseEntity<String> echo(@PathVariable String msg){
-        return ResponseEntity.ok(msg);
+
+    @PostMapping("/add")
+    public ResponseEntity<CarDto> addCar(@RequestBody CarDto carDto) {
+        return ResponseEntity.ok(carService.addCar(carDto));
     }
 
-    @GetMapping("/getCar/{id}")
-    public ResponseEntity<?> getCar(@PathVariable Integer id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getCar(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(carService.getCar(id));
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<CarDto> updateCar(@RequestBody CarDto carDto) {
+        return ResponseEntity.ok(carService.updateCar(carDto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCar(@PathVariable("id") Integer id) {
+        carService.deleteCar(id);
+        return ResponseEntity.ok("car whit id" +id+ "is deleted");
     }
 }

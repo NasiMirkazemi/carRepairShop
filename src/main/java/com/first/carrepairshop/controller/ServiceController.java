@@ -11,12 +11,26 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class ServiceController {
     private final ServicesService servicesService;
+
     @PostMapping("/add")
-    public ResponseEntity<ServicesDto> addService(@RequestBody ServicesDto servicesDto){
-        return  ResponseEntity.ok(servicesService.add(servicesDto));
+    public ResponseEntity<ServicesDto> add(@RequestBody ServicesDto servicesDto) {
+        return ResponseEntity.ok(servicesService.addService(servicesDto));
     }
-    @GetMapping("/get/{serviceId}")
-    public ResponseEntity<ServicesDto> getService(@PathVariable("serviceId") Integer id){
-        return ResponseEntity.ok(servicesService.getById(id));
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ServicesDto> get(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(servicesService.getService(id));
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<ServicesDto> update(@RequestBody ServicesDto servicesDto) {
+        return ResponseEntity.ok(servicesService.updateService(servicesDto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
+        servicesService.deleteService(id);
+        return ResponseEntity.ok("service by :" + id + " is deleted ");
+
     }
 }

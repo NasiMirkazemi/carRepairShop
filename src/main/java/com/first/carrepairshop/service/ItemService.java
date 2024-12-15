@@ -6,6 +6,8 @@ import com.first.carrepairshop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ItemService {
@@ -23,31 +25,7 @@ public class ItemService {
         return itemDto;
     }
 
-    public ItemDto update(ItemDto itemDto) {
-         Item itemEntity=itemRepository.findById(itemDto.getItemId()).get();
-         itemEntity.setName(itemDto.getName());
-         itemEntity.setType(itemDto.getType());
-         itemEntity.setPrice(itemDto.getPrice());
-         itemEntity.setQualityLevel(itemDto.getQualityLevel());
-         itemEntity.setRepairOrders(itemDto.getRepairOrders());
-         itemRepository.save(itemEntity);
-         return ItemDto.builder()
-                 .itemId(itemEntity.getItemId())
-                 .name(itemEntity.getName())
-                 .type(itemEntity.getType())
-                 .price(itemEntity.getPrice())
-                 .qualityLevel(itemEntity.getQualityLevel())
-                 .repairOrders(itemEntity.getRepairOrders())
-                 .build();
-
-    }
-
-    public String removeItemById(Integer id) {
-        itemRepository.deleteById(id);
-         return "item " + id + " deleted";
-    }
-
-    public ItemDto getById(Integer id) {
+    public ItemDto getItem(Integer id) {
         Item itemEntity = itemRepository.findById(id).get();
         return ItemDto.builder()
                 .itemId(itemEntity.getItemId())
@@ -58,4 +36,38 @@ public class ItemService {
                 .repairOrders(itemEntity.getRepairOrders())
                 .build();
     }
+
+    public ItemDto updateItem(ItemDto itemDto) {
+        Optional<Item> itemOptional = itemRepository.findById(itemDto.getItemId());
+        Item itemEntity = null;
+        if (itemOptional.isPresent()) {
+            itemEntity = itemOptional.get();
+            if (itemDto.getName() != null)
+                itemEntity.setName(itemDto.getName());
+            if (itemDto.getType() != null)
+                itemEntity.setType(itemDto.getType());
+            if (itemDto.getPrice() != null)
+                itemEntity.setPrice(itemDto.getPrice());
+            if (itemDto.getQualityLevel() != null)
+                itemEntity.setQualityLevel(itemDto.getQualityLevel());
+            if (itemDto.getRepairOrders() != null)
+                itemEntity.setRepairOrders(itemDto.getRepairOrders());
+            itemRepository.save(itemEntity);
+        }
+        return ItemDto.builder()
+                .itemId(itemEntity.getItemId())
+                .name(itemEntity.getName())
+                .type(itemEntity.getType())
+                .price(itemEntity.getPrice())
+                .qualityLevel(itemEntity.getQualityLevel())
+                .repairOrders(itemEntity.getRepairOrders())
+                .build();
+
+    }
+
+    public void deleteItem(Integer id) {
+        itemRepository.deleteById(id);
+    }
+
+
 }

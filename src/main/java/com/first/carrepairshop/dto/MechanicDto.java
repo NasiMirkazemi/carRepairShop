@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
-@Builder(builderMethodName = "mechanicDtoBuilder")
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -18,6 +20,7 @@ public class MechanicDto extends EmployeeDto {
     private String specialty;
     private String certificate;
     private Integer hourlyRate;
-    private Services services;
+
+    private Set<Services> services;
 
 }

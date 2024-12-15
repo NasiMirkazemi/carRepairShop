@@ -22,7 +22,7 @@ public class Car {
     private Integer year;
 
 
-    @ManyToOne()
-    @JoinColumn(name = "customerId")//refers to the "car" field in Customer
+   @ManyToOne(optional = true)
+    @JoinColumn(name = "customerId",nullable = true)//refers to the "car" field in Customer
     private Customer customer;
 }

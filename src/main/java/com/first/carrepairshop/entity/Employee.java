@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Integer employeeId;
     protected String name;
     protected String lastname;
     protected Integer age;

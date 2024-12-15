@@ -17,7 +17,7 @@ import java.util.Set;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer itemId;
+    private Integer ItemId;
 
     private String name;
     private String type;

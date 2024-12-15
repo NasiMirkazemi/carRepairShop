@@ -19,7 +19,7 @@ import java.util.Set;
 public class RepairOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+    private Integer repairOrderId;
     private String description;
     private LocalDate serviceDate;
     private Integer customerId;

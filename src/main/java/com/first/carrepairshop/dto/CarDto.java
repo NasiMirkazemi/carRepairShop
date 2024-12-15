@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarDto {
-    private Integer CarId;
+    private Integer carId;
     private Long numberPlate;
     private String make;
     private String model;

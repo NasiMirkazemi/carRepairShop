@@ -26,17 +26,15 @@ public class Invoice {
     @JoinColumn(name = "customerId")
     private Customer customer;
 
-
-
     @OneToOne
-    @JoinColumn(name = "orderId")
+    @JoinColumn(name = "repairOrderId")
     private RepairOrder repairOrder;
 
     @OneToMany
-    @JoinColumn(name="invoiceId")
+    @JoinColumn(name="serviceId")
     private List<Services> servicesList;
 
     @OneToMany
-    @JoinColumn(name="invoiceId")
+    @JoinColumn(name="itemId")
     private List<Item> items;
 }

@@ -21,8 +21,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Customer c set c.email=:email where c.customerId=:customerId")
-    Customer updateByEmail(@Param("customerId") Integer customerId, @Param("email") String email);
+    @Query("update Customer c set c.email=:email where c.id=:id")
+    Customer updateByEmail(@Param("id") Integer id, @Param("email") String email);
 
     @Query("select c from Customer c where c.name=:name and c.lastname=:lastname")
     Customer getCustomerByNameAndLastname(@Param("name") String name, @Param("lastname") String lastname);
@@ -30,7 +30,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Customer c set c.phone=:phone where c.customerId=:customerId")
-    Customer updateByPhone(@Param("customerId") Integer customerId, @Param("phone") String phone);
+    @Query("update Customer c set c.phone=:phone where c.id=:id")
+    Customer updateByPhone(@Param("id") Integer id, @Param("phone") String phone);
 }
 

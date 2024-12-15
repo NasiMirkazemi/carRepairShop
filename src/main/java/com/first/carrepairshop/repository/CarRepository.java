@@ -29,9 +29,9 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
     List<Car> findByCustomerName(@Param("customerName") String customerName, @Param("customerLastname") String customerLastname);
 
     @Transactional
-    @Query("DELETE  FROM  Car c WHERE  c.customer.customerId=:customerId")
+    @Query("DELETE  FROM  Car c WHERE  c.customer.id=:id")
     @Modifying
-    void deleteByCustomer_CustomerId(@Param("customerId") Integer customerId);
+    void deleteByCustomer_CustomerId(@Param("id") Integer id);
 
     @Transactional
      @Query("DELETE FROM  Car c WHERE  c.customer.name=:customerName AND  c.customer.lastname=:customerLastname")

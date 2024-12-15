@@ -30,7 +30,7 @@ public class Services {
     @Enumerated(EnumType.STRING)
     private ServiceStatus serviceStatus;//no fix, fix,under fixing
 
-    @OneToMany(mappedBy = "services")
+    @ManyToMany (mappedBy = "services")
     private  List<Mechanic> mechanics;
 
     @ManyToMany(mappedBy = "services")

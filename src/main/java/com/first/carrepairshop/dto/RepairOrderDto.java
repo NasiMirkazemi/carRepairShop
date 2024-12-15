@@ -14,11 +14,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RepairOrderDto {
-    private Integer orderId;
+    private Integer repairOrderId;
     private String description;
     private LocalDate serviceDate;
     private Integer customerId;
-    private Integer MechanicId;
+    private Integer mechanicId;
     private Set<Services> services;
     private Set<Item> items;
 
