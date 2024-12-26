@@ -4,12 +4,13 @@ import com.first.carrepairshop.dto.EmployeeDto;
 import com.first.carrepairshop.entity.Employee;
 import com.first.carrepairshop.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employeeController")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
 

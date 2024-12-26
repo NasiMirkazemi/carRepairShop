@@ -3,6 +3,7 @@ package com.first.carrepairshop.service;
 import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.entity.Mechanic;
 import com.first.carrepairshop.repository.MechanicRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,6 @@ public class MechanicService {
     public void deleteMechanic (Integer id){
         mechanicRepository.deleteById(id);
     }
-
 
 }
 

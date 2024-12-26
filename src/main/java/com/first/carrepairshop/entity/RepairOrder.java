@@ -33,10 +33,5 @@ public class RepairOrder {
     private Set<Services> services = new HashSet<>();
 
 
-    @ManyToMany
-    @JoinTable(name="repairOrder-item",
-    joinColumns = @JoinColumn(name="orderId"),
-    inverseJoinColumns = @JoinColumn(name="itemId"))
-    private Set<Item> items =new HashSet<>();
 
 }

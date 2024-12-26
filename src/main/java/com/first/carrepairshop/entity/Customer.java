@@ -1,16 +1,15 @@
 package com.first.carrepairshop.entity;
 
-import com.first.carrepairshop.entity.Car;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -29,9 +28,9 @@ public class Customer {
     private String address;
 
     @OneToMany(mappedBy = "customer")
-    private List<Invoice> invoices;
+    private List<Invoice> invoices=new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Car> car;
+    @OneToMany( mappedBy = "customer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Car> cars=new ArrayList<>();
 
 }

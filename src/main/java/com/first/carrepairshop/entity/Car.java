@@ -23,6 +23,6 @@ public class Car {
 
 
    @ManyToOne(optional = true)
-    @JoinColumn(name = "customerId",nullable = true)//refers to the "car" field in Customer
+    @JoinColumn(name = "customerId",nullable = true)//refers to the "cars" field in Customer
     private Customer customer;
 }

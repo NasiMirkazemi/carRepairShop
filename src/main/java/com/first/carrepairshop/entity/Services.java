@@ -23,7 +23,7 @@ public class Services {
     private Integer serviceId;
     private String serviceName;
     private String description;
-    private Integer price;
+    private Integer servicePrice;
     private Duration durationInMinutes;
     private LocalDate scheduledTime;
 
@@ -33,6 +33,5 @@ public class Services {
     @ManyToMany (mappedBy = "services")
     private  List<Mechanic> mechanics;
 
-    @ManyToMany(mappedBy = "services")
-    private Set<RepairOrder> repairOrders=new HashSet<>();
+   
 }

@@ -1,12 +1,22 @@
 package com.first.carrepairshop.service;
 
+import com.first.carrepairshop.associations.ItemDetail;
 import com.first.carrepairshop.dto.InvoiceDto;
+import com.first.carrepairshop.dto.ItemDetailDto;
 import com.first.carrepairshop.entity.Invoice;
+import com.first.carrepairshop.entity.Item;
+import com.first.carrepairshop.exception.NotfoundException;
+import com.first.carrepairshop.mapper.CustomerMapper;
+import com.first.carrepairshop.mapper.InvoiceMapper;
+import com.first.carrepairshop.mapper.ItemDetailMapper;
 import com.first.carrepairshop.repository.InvoiceRepository;
+import com.first.carrepairshop.repository.ItemRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -14,31 +24,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
+    private final CustomerMapper customerMapper;
+    private final InvoiceMapper invoiceMapper;
+    private final ItemRepository itemRepository;
+    private final ItemDetailMapper itemDetailMapper;
 
     public InvoiceDto addInvoice(InvoiceDto invoiceDto) {
-        Invoice invoiceEntity = invoiceRepository.save(Invoice.builder()
-                .invoiceNumber(invoiceDto.getInvoiceNumber())
-                .totalAmount(invoiceDto.getTotalAmount())
-                .carId(invoiceDto.getCarId())
-                .customer(invoiceDto.getCustomer())
-                .repairOrder(invoiceDto.getRepairOrder())
-                .servicesList(invoiceDto.getServicesList())
-                .items(invoiceDto.getItems())
-                .build());
-        invoiceDto.setInvoiceId(invoiceEntity.getInvoiceId());
-        return invoiceDto;
+        Invoice invoiceEntity = invoiceMapper.toInvoiceEntity(invoiceDto);
+        Invoice savedInvoice = invoiceRepository.save(invoiceEntity);
+        return invoiceMapper.toInvoiceDto(savedInvoice);
     }
 
     public InvoiceDto getInvoice(Integer id) {
         Invoice invoiceEntity = invoiceRepository.findById(id).get();
-        return InvoiceDto.builder()
-                .invoiceId(invoiceEntity.getInvoiceId())
-                .invoiceNumber(invoiceEntity.getInvoiceNumber())
-                .totalAmount(invoiceEntity.getTotalAmount())
-                .carId(invoiceEntity.getCarId())
-                .customer(invoiceEntity.getCustomer())
-                .repairOrder(invoiceEntity.getRepairOrder())
-                .build();
+        return invoiceMapper.toInvoiceDto(invoiceEntity);
     }
 
     public InvoiceDto update(InvoiceDto invoiceDto) {
@@ -52,20 +51,35 @@ public class InvoiceService {
                 invoiceEntity.setTotalAmount(invoiceDto.getTotalAmount());
             if (invoiceDto.getCarId() != null)
                 invoiceEntity.setCarId(invoiceDto.getCarId());
-            if (invoiceDto.getCustomer() != null)
-                invoiceEntity.setCustomer(invoiceDto.getCustomer());
+            if (invoiceDto.getCustomerDto() != null)
+                invoiceEntity.setCustomer(customerMapper.toCustomerEntity(invoiceDto.getCustomerDto()));
             if (invoiceDto.getRepairOrder() != null)
                 invoiceEntity.setRepairOrder(invoiceDto.getRepairOrder());
+            if (invoiceDto.getItemsDetailList() != null && !invoiceDto.getItemsDetailList().isEmpty()) {
+                List<Integer> itemDetailId=invoiceEntity.getItemDetailList().stream().map(ItemDetail::getItemId).toList();
+                    List<ItemDetail> itemDetailRemove = invoiceEntity.getItemDetailList()
+                            .stream()
+                            .filter(itemDetail -> invoiceDto.getItemsDetailList().stream().noneMatch(itemDDto -> itemDDto.getItemId().equals(itemDetail.getItemId())))
+                            .toList();
+                    invoiceEntity.getItemDetailList().removeAll(itemDetailRemove);
+                    List<ItemDetail> listToAddOrUpdate=invoiceDto.getItemsDetailList().stream()
+                            .map(itemDetailMapper::toItemDetailEntity)
+                            .toList();
+                    for (ItemDetail itemDetail:listToAddOrUpdate){
+                      Item item= itemRepository.findById(itemDetail.getItemId())
+                                       .orElseThrow(()->new NotfoundException("item not found"));
+                      itemDetail.setItemName(item.getName());
+                      itemDetail.setItemPrice(item.getPrice());
+                    }
+                            
+
+
+            }
+
             invoiceRepository.save(invoiceEntity);
         }
-        return InvoiceDto.builder()
-                .invoiceId(invoiceEntity.getInvoiceId())
-                .invoiceNumber(invoiceEntity.getInvoiceNumber())
-                .totalAmount(invoiceEntity.getTotalAmount())
-                .carId(invoiceDto.getCarId())
-                .customer(invoiceEntity.getCustomer())
-                .repairOrder(invoiceEntity.getRepairOrder())
-                .build();
+        return invoiceMapper.toInvoiceDto(invoiceEntity);
+
     }
 
     public void deleteInvoice(Integer id) {

@@ -19,7 +19,6 @@ public class ItemService {
                 .type(itemDto.getType())
                 .price(itemDto.getPrice())
                 .qualityLevel(itemDto.getQualityLevel())
-                .repairOrders(itemDto.getRepairOrders())
                 .build());
         itemDto.setItemId(itemEntity.getItemId());
         return itemDto;
@@ -33,7 +32,6 @@ public class ItemService {
                 .type(itemEntity.getType())
                 .price(itemEntity.getPrice())
                 .qualityLevel(itemEntity.getQualityLevel())
-                .repairOrders(itemEntity.getRepairOrders())
                 .build();
     }
 
@@ -50,8 +48,6 @@ public class ItemService {
                 itemEntity.setPrice(itemDto.getPrice());
             if (itemDto.getQualityLevel() != null)
                 itemEntity.setQualityLevel(itemDto.getQualityLevel());
-            if (itemDto.getRepairOrders() != null)
-                itemEntity.setRepairOrders(itemDto.getRepairOrders());
             itemRepository.save(itemEntity);
         }
         return ItemDto.builder()
@@ -60,7 +56,6 @@ public class ItemService {
                 .type(itemEntity.getType())
                 .price(itemEntity.getPrice())
                 .qualityLevel(itemEntity.getQualityLevel())
-                .repairOrders(itemEntity.getRepairOrders())
                 .build();
 
     }

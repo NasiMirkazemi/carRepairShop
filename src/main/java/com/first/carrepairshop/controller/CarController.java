@@ -3,13 +3,14 @@ package com.first.carrepairshop.controller;
 import com.first.carrepairshop.dto.CarDto;
 import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.service.CarService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/carController")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CarController {
     private final CarService carService;
 
@@ -32,6 +33,6 @@ public class CarController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCar(@PathVariable("id") Integer id) {
         carService.deleteCar(id);
-        return ResponseEntity.ok("car whit id" +id+ "is deleted");
+        return ResponseEntity.ok("cars whit id" +id+ "is deleted");
     }
 }

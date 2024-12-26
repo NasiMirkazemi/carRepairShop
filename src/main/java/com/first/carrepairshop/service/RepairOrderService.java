@@ -21,7 +21,6 @@ public class RepairOrderService {
                 .serviceDate(repairOrderDto.getServiceDate())
                 .customerId(repairOrderDto.getCustomerId())
                 .mechanicId(repairOrderDto.getMechanicId())
-                .items(repairOrderDto.getItems())
                 .services(repairOrderDto.getServices())
                 .build());
         return RepairOrderDto.builder()
@@ -30,24 +29,23 @@ public class RepairOrderService {
                 .serviceDate(repairOrder.getServiceDate())
                 .customerId(repairOrder.getCustomerId())
                 .mechanicId(repairOrder.getMechanicId())
-                .items(repairOrder.getItems())
                 .services(repairOrder.getServices())
                 .build();
     }
-    public RepairOrderDto getRepairOrder(Integer id){
-        RepairOrder repairOrderEntity=repairOrderRepository.findById(id).get();
-         return RepairOrderDto.builder()
-                 .repairOrderId(repairOrderEntity.getRepairOrderId())
-                 .description(repairOrderEntity.getDescription())
-                 .serviceDate(repairOrderEntity.getServiceDate())
-                 .customerId(repairOrderEntity.getCustomerId())
-                 .mechanicId(repairOrderEntity.getMechanicId())
-                 .services(repairOrderEntity.getServices())
-                 .items(repairOrderEntity.getItems())
-                 .build();
+
+    public RepairOrderDto getRepairOrder(Integer id) {
+        RepairOrder repairOrderEntity = repairOrderRepository.findById(id).get();
+        return RepairOrderDto.builder()
+                .repairOrderId(repairOrderEntity.getRepairOrderId())
+                .description(repairOrderEntity.getDescription())
+                .serviceDate(repairOrderEntity.getServiceDate())
+                .customerId(repairOrderEntity.getCustomerId())
+                .mechanicId(repairOrderEntity.getMechanicId())
+                .services(repairOrderEntity.getServices())
+                .build();
     }
 
-    public RepairOrderDto updateRepairOrder( RepairOrderDto repairOrderDto) {
+    public RepairOrderDto updateRepairOrder(RepairOrderDto repairOrderDto) {
         Optional<RepairOrder> repairOrderOptional = repairOrderRepository.findById(repairOrderDto.getRepairOrderId());
         RepairOrder repairOrderEntity = null;
         if (repairOrderOptional.isPresent()) {
@@ -64,10 +62,7 @@ public class RepairOrderService {
                 repairOrderEntity.getServices().clear();
                 repairOrderEntity.getServices().addAll(repairOrderDto.getServices());
             }
-            if (!repairOrderDto.getItems().isEmpty()) {
-                repairOrderEntity.getItems().clear();
-                repairOrderEntity.getItems().addAll(repairOrderDto.getItems());
-            }
+
             repairOrderRepository.save(repairOrderEntity);
         }
         return RepairOrderDto.builder()
@@ -77,10 +72,10 @@ public class RepairOrderService {
                 .customerId(repairOrderEntity.getCustomerId())
                 .mechanicId(repairOrderEntity.getMechanicId())
                 .services(repairOrderEntity.getServices())
-                .items(repairOrderEntity.getItems())
                 .build();
     }
-    public void deleteRepairOrder(Integer id){
+
+    public void deleteRepairOrder(Integer id) {
         repairOrderRepository.deleteById(id);
     }
 

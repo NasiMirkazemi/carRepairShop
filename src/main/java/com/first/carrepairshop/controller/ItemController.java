@@ -3,12 +3,13 @@ package com.first.carrepairshop.controller;
 import com.first.carrepairshop.dto.ItemDto;
 import com.first.carrepairshop.service.ItemService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/itemController")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
     @PostMapping("/add")

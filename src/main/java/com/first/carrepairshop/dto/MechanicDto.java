@@ -2,6 +2,7 @@ package com.first.carrepairshop.dto;
 
 import com.first.carrepairshop.entity.Services;
 import com.first.carrepairshop.entity.RepairOrder;
+import jakarta.persistence.DiscriminatorValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.Set;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@DiscriminatorValue("mechanic")
 
 public class MechanicDto extends EmployeeDto {
     private String specialty;

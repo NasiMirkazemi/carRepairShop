@@ -24,8 +24,5 @@ public class Item {
     private Integer price;
     private ItemQuality qualityLevel;
 
-    @ManyToMany(mappedBy = "items")
-    private Set<RepairOrder> repairOrders=new HashSet<>();
-
 
 }

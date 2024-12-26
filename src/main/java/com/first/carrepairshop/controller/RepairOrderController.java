@@ -4,12 +4,13 @@ import com.first.carrepairshop.dto.RepairOrderDto;
 import com.first.carrepairshop.service.RepairOrderService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/repairOrderController")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RepairOrderController {
     private final RepairOrderService repairOrderService;
 

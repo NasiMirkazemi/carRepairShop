@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -15,12 +16,13 @@ import java.util.List;
 
 public class InvoiceDto {
     private  Integer invoiceId;
+    private LocalDate invoiceDate;
     private Integer invoiceNumber;
     private Integer carId;
     private Integer totalAmount;
-    private Customer customer;
+    private CustomerDto customerDto;
     private RepairOrder repairOrder;
-    private List<Services> servicesList;
-    private List<Item> items;
+    private List<ServiceDetailDto> servicesDetailList;
+    private List<ItemDetailDto> itemsDetailList;
 
 }

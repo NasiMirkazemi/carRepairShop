@@ -1,10 +1,15 @@
 package com.first.carrepairshop.entity;
 
+import com.first.carrepairshop.associations.ItemDetail;
+import com.first.carrepairshop.associations.ServiceDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,11 +23,12 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
+    private LocalDate invoiceDate;
     private Integer invoiceNumber;
     private Integer carId;
     private Integer totalAmount;
 
-   @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "customerId")
     private Customer customer;
 
@@ -30,11 +36,11 @@ public class Invoice {
     @JoinColumn(name = "repairOrderId")
     private RepairOrder repairOrder;
 
-    @OneToMany
-    @JoinColumn(name="serviceId")
-    private List<Services> servicesList;
+    @ElementCollection
+    @CollectionTable(name = "invoice_services", joinColumns = @JoinColumn(name = "invoiceId"))
+    private List<ServiceDetail> servicesList=new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name="itemId")
-    private List<Item> items;
+    @ElementCollection
+    @CollectionTable(name = "invoices_items", joinColumns = @JoinColumn(name = "invoice"))
+    private List<ItemDetail> itemDetailList =new ArrayList<>();
 }

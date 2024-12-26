@@ -4,6 +4,7 @@ import com.first.carrepairshop.dto.CarDto;
 import com.first.carrepairshop.entity.Car;
 import com.first.carrepairshop.entity.Customer;
 import com.first.carrepairshop.exception.NotfoundException;
+import com.first.carrepairshop.mapper.CustomerMapper;
 import com.first.carrepairshop.repository.CarRepository;
 import com.first.carrepairshop.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class CarService {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
 
     public CarDto addCar(CarDto carDto) {
@@ -26,7 +28,7 @@ public class CarService {
                 .model(carDto.getModel())
                 .make(carDto.getMake())
                 .year(carDto.getYear())
-                .customer(carDto.getCustomer())
+                .customer(customerMapper.toCustomerEntity(carDto.getCustomerDto()))
                 .build());
         carDto.setCarId(carEntity.getCarId());
         return carDto;
@@ -41,7 +43,7 @@ public class CarService {
                 .model(carEntity.getModel())
                 .make(carEntity.getMake())
                 .year(carEntity.getYear())
-                .customer(carEntity.getCustomer())
+                .customerDto(customerMapper.toCustomerDto(carEntity.getCustomer()))
                 .build();
     }
 
@@ -58,13 +60,13 @@ public class CarService {
                 carEntity.setModel(carDto.getModel());
             if (carDto.getYear() != null)
                 carEntity.setYear(carDto.getYear());
-            if (carDto.getCustomer() != null) {
-                Optional<Customer> customerOptional = customerRepository.findById(carDto.getCustomer().getCustomerId());
+            if (carDto.getCustomerDto() != null) {
+                Optional<Customer> customerOptional = customerRepository.findById(carDto.getCustomerDto().getCustomerId());
                 if (!customerOptional.isPresent()) {
                     throw new NotfoundException("Customer not found");
                 }
                 Customer customer = customerOptional.get();
-                carEntity.setCustomer(carDto.getCustomer());
+                carEntity.setCustomer(customerMapper.toCustomerEntity(carDto.getCustomerDto()));
             } else {
                 carEntity.setCustomer(null);
             }
@@ -77,7 +79,7 @@ public class CarService {
                 .model(carEntity.getModel())
                 .make(carEntity.getMake())
                 .year(carEntity.getYear())
-                .customer(carEntity.getCustomer())
+                .customerDto(customerMapper.toCustomerDto(carEntity.getCustomer()))
                 .build();
     }
 

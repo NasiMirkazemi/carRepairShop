@@ -16,6 +16,6 @@ public class CarDto {
     private String make;
     private String model;
     private Integer year;
-    private Customer customer;
+    private CustomerDto customerDto;
 
 }

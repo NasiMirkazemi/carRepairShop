@@ -2,6 +2,8 @@ package com.first.carrepairshop.controller;
 
 import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.service.MechanicService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/mechanicController")
 @RequiredArgsConstructor
+
 public class MechanicController {
     private final MechanicService mechanicService;
+
+
 
     @PostMapping("/add")
     public ResponseEntity<MechanicDto> addMechanic(@RequestBody MechanicDto mechanicDto) {
