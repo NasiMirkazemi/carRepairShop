@@ -2,16 +2,13 @@ package com.first.carrepairshop.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +18,9 @@ public class Car {
     private String model;
     private Integer year;
 
-
-   @ManyToOne(optional = true)
-    @JoinColumn(name = "customerId",nullable = true)//refers to the "cars" field in Customer
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "customer_id", nullable = true)//refers to the "cars" field in Customer
     private Customer customer;
+
+
 }

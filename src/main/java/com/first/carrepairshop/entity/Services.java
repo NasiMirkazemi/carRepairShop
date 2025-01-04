@@ -8,15 +8,17 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +28,10 @@ public class Services {
     private Integer servicePrice;
     private Duration durationInMinutes;
     private LocalDate scheduledTime;
-
     @Enumerated(EnumType.STRING)
     private ServiceStatus serviceStatus;//no fix, fix,under fixing
 
-    @ManyToMany (mappedBy = "services")
-    private  List<Mechanic> mechanics;
+    @ManyToMany(mappedBy = "services")
+    private List<Mechanic> mechanics = new ArrayList<>();
 
-   
 }

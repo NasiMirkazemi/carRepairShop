@@ -19,13 +19,13 @@ public interface ServicesRepository extends JpaRepository<Services, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Services service set service.price=:price where service.id=:id ")
-    Integer updateByPrice(@Param("id") Integer id, @Param("price") Integer price);
+    @Query(value = "update Services service set service.servicePrice=:servicePrice where service.serviceId=:serviceId ")
+    Integer updateByPrice(@Param("serviceId") Integer serviceId, @Param("servicePrice") Integer servicePrice);
 
     @Transactional
     @Modifying
-    @Query(" update Services service set service.scheduledTime=:scheduledTime where service.id=:id")
-    Integer updateByScheduledTime(@Param("id") Integer id, @Param("scheduledTime") String scheduledTime);
+    @Query(value = " update Services service set service.scheduledTime=:scheduledTime where service.serviceId=:serviceId")
+    Integer updateByScheduledTime(@Param("serviceId") Integer serviceId, @Param("scheduledTime") String scheduledTime);
 
 
 }

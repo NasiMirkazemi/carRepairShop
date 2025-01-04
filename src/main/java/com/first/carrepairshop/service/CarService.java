@@ -4,6 +4,7 @@ import com.first.carrepairshop.dto.CarDto;
 import com.first.carrepairshop.entity.Car;
 import com.first.carrepairshop.entity.Customer;
 import com.first.carrepairshop.exception.NotfoundException;
+import com.first.carrepairshop.mapper.CarMapper;
 import com.first.carrepairshop.mapper.CustomerMapper;
 import com.first.carrepairshop.repository.CarRepository;
 import com.first.carrepairshop.repository.CustomerRepository;
@@ -14,37 +15,22 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-
 public class CarService {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final CarMapper carMapper;
 
 
     public CarDto addCar(CarDto carDto) {
-        Car carEntity = carRepository.save(Car.builder()
-                .carId(carDto.getCarId())
-                .numberPlate(carDto.getNumberPlate())
-                .model(carDto.getModel())
-                .make(carDto.getMake())
-                .year(carDto.getYear())
-                .customer(customerMapper.toCustomerEntity(carDto.getCustomerDto()))
-                .build());
-        carDto.setCarId(carEntity.getCarId());
-        return carDto;
+        Car carEntity = carRepository.save(carMapper.toCarEntity(carDto));
+        return carMapper.toCarDto(carEntity);
 
     }
 
     public CarDto getCar(Integer id) {
         Car carEntity = carRepository.findById(id).get();
-        return CarDto.builder()
-                .carId(carEntity.getCarId())
-                .numberPlate(carEntity.getNumberPlate())
-                .model(carEntity.getModel())
-                .make(carEntity.getMake())
-                .year(carEntity.getYear())
-                .customerDto(customerMapper.toCustomerDto(carEntity.getCustomer()))
-                .build();
+        return carMapper.toCarDto(carEntity);
     }
 
     public CarDto updateCar(CarDto carDto) {
@@ -73,18 +59,11 @@ public class CarService {
 
             carRepository.save(carEntity);
         }
-        return CarDto.builder()
-                .carId(carEntity.getCarId())
-                .numberPlate(carEntity.getNumberPlate())
-                .model(carEntity.getModel())
-                .make(carEntity.getMake())
-                .year(carEntity.getYear())
-                .customerDto(customerMapper.toCustomerDto(carEntity.getCustomer()))
-                .build();
+        return carMapper.toCarDto(carEntity);
     }
 
     public void deleteCar(Integer id) {
-        carRepository.deleteById(id);
+    carRepository.deleteById(id);
     }
 
 }

@@ -5,16 +5,21 @@ import com.first.carrepairshop.service.MechanicService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mechanicController")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 
 public class MechanicController {
     private final MechanicService mechanicService;
 
+    public MechanicController(MechanicService mechanicService) {
+        this.mechanicService = mechanicService;
+    }
 
 
     @PostMapping("/add")

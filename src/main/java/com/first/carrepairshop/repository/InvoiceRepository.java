@@ -14,14 +14,14 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
     void deleteByInvoiceNumber(Integer invoiceNumber);
 
-    @Query("select i from Invoice i where i.customer.id=:id ")
-    Invoice findByCustomer(@Param("id") Integer id);
+    @Query("select i from Invoice i where i.customer.customerId=:customerId ")
+    Invoice findByCustomer(@Param("customerId") Integer customerId);
 
 
     @Transactional
     @Modifying
-    @Query("delete  from Invoice i where i.customer.id=:id ")
-    void deleteByCustomerId(@Param("id") Integer id);
+    @Query("delete  from Invoice i where i.customer.customerId=:customerId ")
+    void deleteByCustomerId(@Param("customerId") Integer customerId);
 
 
 }

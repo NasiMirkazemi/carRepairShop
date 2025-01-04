@@ -2,43 +2,38 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.dto.ServicesDto;
 import com.first.carrepairshop.entity.Services;
+import com.first.carrepairshop.exception.NotfoundException;
+import com.first.carrepairshop.mapper.MechanicMapper;
+import com.first.carrepairshop.mapper.ServiceMapper;
 import com.first.carrepairshop.repository.ServicesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.first.carrepairshop.entity.Services.*;
+
 @Service
-@RequiredArgsConstructor
 public class ServicesService {
     private final ServicesRepository servicesRepository;
+    private final ServiceMapper serviceMapper;
+    private final MechanicMapper mechanicMapper;
+
+    public ServicesService(ServicesRepository servicesRepository, ServiceMapper serviceMapper, MechanicMapper mechanicMapper) {
+        this.servicesRepository = servicesRepository;
+        this.serviceMapper = serviceMapper;
+        this.mechanicMapper = mechanicMapper;
+    }
 
     public ServicesDto addService(ServicesDto servicesDto) {
-        Services services = servicesRepository.save(Services.builder()
-                .serviceName(servicesDto.getServiceName())
-                .description(servicesDto.getDescription())
-                .servicePrice(servicesDto.getPrice())
-                .durationInMinutes(servicesDto.getDurationInMinutes())
-                .serviceStatus(servicesDto.getServiceStatus())
-                .scheduledTime(servicesDto.getScheduledTime())
-                .mechanics(servicesDto.getMechanics())
-                .build());
-        servicesDto.setServiceId(services.getServiceId());
+        Services service = servicesRepository.save(serviceMapper.toServiceEntity(servicesDto));
+        servicesDto.setServiceId(service.getServiceId());
         return servicesDto;
     }
 
     public ServicesDto getService(Integer id) {
         Services services = servicesRepository.findById(id).get();
-        return ServicesDto.builder()
-                .serviceId(services.getServiceId())
-                .serviceName(services.getServiceName())
-                .description(services.getDescription())
-                .price(services.getServicePrice())
-                .durationInMinutes(services.getDurationInMinutes())
-                .serviceStatus(services.getServiceStatus())
-                .scheduledTime(services.getScheduledTime())
-                .mechanics(services.getMechanics())
-                .build();
+        return serviceMapper.toServicesDto(services);
     }
 
     public ServicesDto updateService(ServicesDto servicesDto) {
@@ -50,34 +45,25 @@ public class ServicesService {
                 serviceEntity.setServiceName(servicesDto.getServiceName());
             if (servicesDto.getDescription() != null)
                 serviceEntity.setDescription(servicesDto.getDescription());
-            if (servicesDto.getPrice() != null)
-                serviceEntity.setServicePrice(servicesDto.getPrice());
+            if (servicesDto.getServicePrice() != null)
+                serviceEntity.setServicePrice(servicesDto.getServicePrice());
             if (servicesDto.getDurationInMinutes() != null)
                 serviceEntity.setDurationInMinutes(servicesDto.getDurationInMinutes());
             if (servicesDto.getScheduledTime() != null)
                 serviceEntity.setScheduledTime(servicesDto.getScheduledTime());
             if (servicesDto.getServiceStatus() != null)
                 serviceEntity.setServiceStatus(servicesDto.getServiceStatus());
-            if (servicesDto.getMechanics() != null)
-                serviceEntity.setMechanics(servicesDto.getMechanics());
+            if (servicesDto.getMechanicsDto() != null)
+                serviceEntity.setMechanics(mechanicMapper.toEntityList(servicesDto.getMechanicsDto()));
 
         }
-            return ServicesDto.builder()
-                    .serviceId(serviceEntity.getServiceId())
-                    .serviceName(serviceEntity.getServiceName())
-                    .description(serviceEntity.getDescription())
-                    .price(serviceEntity.getServicePrice())
-                    .durationInMinutes(serviceEntity.getDurationInMinutes())
-                    .serviceStatus(serviceEntity.getServiceStatus())
-                    .scheduledTime(serviceEntity.getScheduledTime())
-                    .mechanics(serviceEntity.getMechanics())
-                    .build();
-
+        return serviceMapper.toServicesDto(serviceEntity);
 
 
     }
-        public void deleteService (Integer id){
-            servicesRepository.deleteById(id);
-            System.out.println("service " + id + "deleted");
-        }
+
+    public void deleteService(Integer id) {
+        servicesRepository.deleteById(id);
+        System.out.println("service " + id + "deleted");
+    }
 }

@@ -4,8 +4,9 @@ import com.first.carrepairshop.dto.EmployeeDto;
 import com.first.carrepairshop.entity.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 

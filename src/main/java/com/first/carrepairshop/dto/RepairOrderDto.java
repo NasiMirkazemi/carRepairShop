@@ -7,19 +7,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class RepairOrderDto {
     private Integer repairOrderId;
     private String description;
     private LocalDate serviceDate;
     private Integer customerId;
     private Integer mechanicId;
-    private Set<Services> services;
-    private Set<Item> items;
+    private List<ServicesDto> servicesDto = new ArrayList<>();
+
 
 }

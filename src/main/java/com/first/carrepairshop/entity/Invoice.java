@@ -3,10 +3,7 @@ package com.first.carrepairshop.entity;
 import com.first.carrepairshop.associations.ItemDetail;
 import com.first.carrepairshop.associations.ServiceDetail;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,10 +11,11 @@ import java.util.List;
 
 @Entity
 @Table
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 
 public class Invoice {
     @Id
@@ -29,18 +27,19 @@ public class Invoice {
     private Integer totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "customerId")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToOne
-    @JoinColumn(name = "repairOrderId")
+    @JoinColumn(name = "repair_order_id")
     private RepairOrder repairOrder;
 
     @ElementCollection
     @CollectionTable(name = "invoice_services", joinColumns = @JoinColumn(name = "invoiceId"))
-    private List<ServiceDetail> servicesList=new ArrayList<>();
+    private List<ServiceDetail> servicesDetailList = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "invoices_items", joinColumns = @JoinColumn(name = "invoice"))
-    private List<ItemDetail> itemDetailList =new ArrayList<>();
+    private List<ItemDetail> itemsDetailList = new ArrayList<>();
+
 }

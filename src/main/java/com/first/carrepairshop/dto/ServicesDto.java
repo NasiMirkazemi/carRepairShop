@@ -10,23 +10,22 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ServicesDto {
     private Integer serviceId;
     private String serviceName;
     private String description;
-    private Integer price;
+    private Integer servicePrice;
     private Duration durationInMinutes;
     private LocalDate scheduledTime;
     private ServiceStatus serviceStatus;
-    private List<Mechanic> mechanics;
-    private Set<RepairOrder> repairOrders;
+    private List<MechanicDto> mechanicsDto = new ArrayList<>();
 
 }

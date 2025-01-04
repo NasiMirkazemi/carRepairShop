@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class ServiceDetailDto {
     private Integer serviceId;
     private String serviceName;
     private Integer servicePrice;
+
 }

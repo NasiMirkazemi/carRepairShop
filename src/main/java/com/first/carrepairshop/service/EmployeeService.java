@@ -2,6 +2,7 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.dto.EmployeeDto;
 import com.first.carrepairshop.entity.Employee;
+import com.first.carrepairshop.mapper.EmployeeMapper;
 import com.first.carrepairshop.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,29 +13,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
+
 
     public EmployeeDto addEmployee(EmployeeDto employeeDto) {
-        Employee employee = employeeRepository.save(Employee.builder().name(employeeDto.getName())
-                .lastname(employeeDto.getLastname())
-                .role(employeeDto.getRole())
-                .age(employeeDto.getAge())
-                .phoneNumber(employeeDto.getPhoneNumber())
-                .salary(employeeDto.getSalary())
-                .build());
-        return employeeDto;
+        Employee employee = employeeRepository.save(employeeMapper.toEmployeeEntity(employeeDto));
+        return employeeMapper.toEmployeeDto(employee);
     }
 
     public EmployeeDto getEmployee(Integer id) {
         Employee employeeEntity = (Employee) employeeRepository.findById(id).get();
-        return EmployeeDto.builder()
-                .employeeId(employeeEntity.getEmployeeId())
-                .name(employeeEntity.getName())
-                .lastname(employeeEntity.getLastname())
-                .age(employeeEntity.getAge())
-                .role(employeeEntity.getRole())
-                .salary(employeeEntity.getSalary())
-                .phoneNumber(employeeEntity.getPhoneNumber())
-                .build();
+        return employeeMapper.toEmployeeDto(employeeEntity);
 
 
     }
@@ -57,15 +46,7 @@ public class EmployeeService {
             if (employeeDto.getPhoneNumber() != null)
                 employeeEntity.setPhoneNumber(employeeDto.getPhoneNumber());
         }
-        return EmployeeDto.builder()
-                .employeeId(employeeEntity.getEmployeeId())
-                .name(employeeEntity.getName())
-                .lastname(employeeEntity.getLastname())
-                .age(employeeEntity.getAge())
-                .role(employeeEntity.getRole())
-                .salary(employeeEntity.getSalary())
-                .phoneNumber(employeeEntity.getPhoneNumber())
-                .build();
+        return employeeMapper.toEmployeeDto(employeeEntity);
     }
 
     public void deleteEmployeeById(Integer id) {

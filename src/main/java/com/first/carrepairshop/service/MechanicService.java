@@ -2,6 +2,8 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.entity.Mechanic;
+import com.first.carrepairshop.mapper.MechanicMapper;
+import com.first.carrepairshop.mapper.ServiceMapper;
 import com.first.carrepairshop.repository.MechanicRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -13,31 +15,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MechanicService {
     private final MechanicRepository mechanicRepository;
+    private final MechanicMapper mechanicMapper;
+    private final ServiceMapper serviceMapper;
 
     public MechanicDto addMechanic(MechanicDto mechanicDto) {
-        Mechanic mechanicEntity = mechanicRepository.save(Mechanic.builder()
-                .name(mechanicDto.getName())
-                .lastname(mechanicDto.getLastname())
-                .age(mechanicDto.getAge())
-                .role(mechanicDto.getRole())
-                .phoneNumber(mechanicDto.getPhoneNumber())
-                .salary(mechanicDto.getSalary())
-                .specialty(mechanicDto.getSpecialty())
-                .certificate(mechanicDto.getCertificate())
-                .hourlyRate(mechanicDto.getHourlyRate())
-                .services(mechanicDto.getServices())
-                .build());
-        mechanicDto.setEmployeeId(mechanicEntity.getEmployeeId());
-        return mechanicDto;
+
+        Mechanic mechanicEntity = mechanicRepository.save(mechanicMapper.toMechanicEntity(mechanicDto));
+        return mechanicMapper.toMechanicDto(mechanicEntity);
     }
 
     public MechanicDto getMechanic(Integer id) {
         Mechanic mechanicEntity = mechanicRepository.findById(id).get();
-        return MechanicDto.builder().specialty(mechanicEntity.getSpecialty())
-                .certificate(mechanicEntity.getCertificate())
-                .hourlyRate(mechanicEntity.getHourlyRate())
-                .services(mechanicEntity.getServices()).build();
-
+        return mechanicMapper.toMechanicDto(mechanicEntity);
 
     }
 
@@ -52,20 +41,16 @@ public class MechanicService {
                 mechanicEntity.setCertificate(mechanicDto.getCertificate());
             if (mechanicDto.getHourlyRate() != null)
                 mechanicEntity.setHourlyRate(mechanicDto.getHourlyRate());
-            if (!mechanicDto.getServices().isEmpty()) {
+            if (!mechanicDto.getServicesDto().isEmpty()) {
                 mechanicEntity.getServices().clear();
-                mechanicEntity.getServices().addAll(mechanicDto.getServices());
+                mechanicEntity.getServices().addAll(serviceMapper.toEntityList(mechanicDto.getServicesDto()));
             }
             mechanicRepository.save(mechanicEntity);
         }
-        return MechanicDto.builder()
-                .specialty(mechanicEntity.getSpecialty())
-                .certificate(mechanicEntity.getCertificate())
-                .hourlyRate(mechanicEntity.getHourlyRate())
-                .services(mechanicEntity.getServices())
-                .build();
+        return mechanicMapper.toMechanicDto(mechanicEntity);
     }
-    public void deleteMechanic (Integer id){
+
+    public void deleteMechanic(Integer id) {
         mechanicRepository.deleteById(id);
     }
 

@@ -13,15 +13,18 @@ import java.util.List;
 
 @Repository
 @Component
-public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
-     Employee findByName(String name) ;
-     Employee findByPhoneNumber(String phoneNumber);
-     List<Employee> findByRole( String role);
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+    Employee findByName(String name);
 
-     void deleteByName( String name);
-     @Modifying
-     @Transactional
-     @Query("update Employee e set e.name=:#{#employee.name},e.lastname=:#{#employee.lastname},e.age=:#{#employee.age},e.role=:#{#employee.role},e.phoneNumber=:#{#employee.phoneNumber},e.salary=:#{#employee.salary} where e.id=:id")
-     Employee updateById(@Param("employee") Employee employee,@Param("id") Integer id);
+    Employee findByPhoneNumber(String phoneNumber);
+
+    List<Employee> findByRole(String role);
+
+    void deleteByName(String name);
+
+    @Modifying
+    @Transactional
+    @Query("update Employee e set e.name=:#{#employee.name},e.lastname=:#{#employee.lastname},e.age=:#{#employee.age},e.role=:#{#employee.role},e.phoneNumber=:#{#employee.phoneNumber},e.salary=:#{#employee.salary} where e.employeeId=:employeeId ")
+    Employee updateById(@Param("employee") Employee employee, @Param("employeeId") Integer employeeId);
 
 }

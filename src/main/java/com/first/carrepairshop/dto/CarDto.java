@@ -6,10 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.util.Objects;
+
+
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class CarDto {
     private Integer carId;
     private Long numberPlate;

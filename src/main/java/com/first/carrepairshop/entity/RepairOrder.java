@@ -7,14 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 
 public class RepairOrder {
     @Id
@@ -24,14 +27,11 @@ public class RepairOrder {
     private LocalDate serviceDate;
     private Integer customerId;
     private Integer mechanicId;
-
-
     @ManyToMany
-    @JoinTable(name = "repairOrder-service",
-    joinColumns = @JoinColumn(name = "orderId"),
-    inverseJoinColumns = @JoinColumn(name = "serviceId"))
-    private Set<Services> services = new HashSet<>();
-
+    @JoinTable(name = "repair_order-service",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id"))
+    private List<Services> services = new ArrayList<>();
 
 
 }

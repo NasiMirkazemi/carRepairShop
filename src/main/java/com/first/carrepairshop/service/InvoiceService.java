@@ -2,20 +2,18 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.associations.ItemDetail;
 import com.first.carrepairshop.dto.InvoiceDto;
-import com.first.carrepairshop.dto.ItemDetailDto;
 import com.first.carrepairshop.entity.Invoice;
 import com.first.carrepairshop.entity.Item;
 import com.first.carrepairshop.exception.NotfoundException;
 import com.first.carrepairshop.mapper.CustomerMapper;
 import com.first.carrepairshop.mapper.InvoiceMapper;
 import com.first.carrepairshop.mapper.ItemDetailMapper;
+import com.first.carrepairshop.mapper.RepairOrderMapper;
 import com.first.carrepairshop.repository.InvoiceRepository;
 import com.first.carrepairshop.repository.ItemRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +26,8 @@ public class InvoiceService {
     private final InvoiceMapper invoiceMapper;
     private final ItemRepository itemRepository;
     private final ItemDetailMapper itemDetailMapper;
+    private final RepairOrderMapper repairOrderMapper;
+
 
     public InvoiceDto addInvoice(InvoiceDto invoiceDto) {
         Invoice invoiceEntity = invoiceMapper.toInvoiceEntity(invoiceDto);
@@ -53,25 +53,24 @@ public class InvoiceService {
                 invoiceEntity.setCarId(invoiceDto.getCarId());
             if (invoiceDto.getCustomerDto() != null)
                 invoiceEntity.setCustomer(customerMapper.toCustomerEntity(invoiceDto.getCustomerDto()));
-            if (invoiceDto.getRepairOrder() != null)
-                invoiceEntity.setRepairOrder(invoiceDto.getRepairOrder());
+            if (invoiceDto.getRepairOrderDto() != null)
+                invoiceEntity.setRepairOrder(repairOrderMapper.toRepairOrderEntity(invoiceDto.getRepairOrderDto()));
             if (invoiceDto.getItemsDetailList() != null && !invoiceDto.getItemsDetailList().isEmpty()) {
-                List<Integer> itemDetailId=invoiceEntity.getItemDetailList().stream().map(ItemDetail::getItemId).toList();
-                    List<ItemDetail> itemDetailRemove = invoiceEntity.getItemDetailList()
-                            .stream()
-                            .filter(itemDetail -> invoiceDto.getItemsDetailList().stream().noneMatch(itemDDto -> itemDDto.getItemId().equals(itemDetail.getItemId())))
-                            .toList();
-                    invoiceEntity.getItemDetailList().removeAll(itemDetailRemove);
-                    List<ItemDetail> listToAddOrUpdate=invoiceDto.getItemsDetailList().stream()
-                            .map(itemDetailMapper::toItemDetailEntity)
-                            .toList();
-                    for (ItemDetail itemDetail:listToAddOrUpdate){
-                      Item item= itemRepository.findById(itemDetail.getItemId())
-                                       .orElseThrow(()->new NotfoundException("item not found"));
-                      itemDetail.setItemName(item.getName());
-                      itemDetail.setItemPrice(item.getPrice());
-                    }
-                            
+                List<Integer> itemDetailId = invoiceEntity.getItemsDetailList().stream().map(ItemDetail::getItemId).toList();
+                List<ItemDetail> itemDetailRemove = invoiceEntity.getItemsDetailList()
+                        .stream()
+                        .filter(itemDetail -> invoiceDto.getItemsDetailList().stream().noneMatch(itemDDto -> itemDDto.getItemId().equals(itemDetail.getItemId())))
+                        .toList();
+                invoiceEntity.getItemsDetailList().removeAll(itemDetailRemove);
+                List<ItemDetail> listToAddOrUpdate = invoiceDto.getItemsDetailList().stream()
+                        .map(itemDetailMapper::toItemDetailEntity)
+                        .toList();
+                for (ItemDetail itemDetail : listToAddOrUpdate) {
+                    Item item = itemRepository.findById(itemDetail.getItemId())
+                            .orElseThrow(() -> new NotfoundException("item not found"));
+                    itemDetail.setItemName(item.getName());
+                    itemDetail.setItemPrice(item.getPrice());
+                }
 
 
             }

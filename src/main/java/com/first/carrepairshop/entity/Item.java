@@ -10,15 +10,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ItemId;
-
     private String name;
     private String type;
     private Integer price;

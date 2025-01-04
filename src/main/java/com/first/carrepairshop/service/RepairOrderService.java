@@ -3,6 +3,8 @@ package com.first.carrepairshop.service;
 import com.first.carrepairshop.dto.RepairOrderDto;
 import com.first.carrepairshop.entity.RepairOrder;
 import com.first.carrepairshop.entity.Services;
+import com.first.carrepairshop.mapper.RepairOrderMapper;
+import com.first.carrepairshop.mapper.ServiceMapper;
 import com.first.carrepairshop.repository.RepairOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,35 +16,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RepairOrderService {
     private final RepairOrderRepository repairOrderRepository;
+    private final RepairOrderMapper repairOrderMapper;
+    private final ServiceMapper serviceMapper;
 
     public RepairOrderDto addRepairOrder(RepairOrderDto repairOrderDto) {
-        RepairOrder repairOrder = repairOrderRepository.save(RepairOrder.builder()
-                .description(repairOrderDto.getDescription())
-                .serviceDate(repairOrderDto.getServiceDate())
-                .customerId(repairOrderDto.getCustomerId())
-                .mechanicId(repairOrderDto.getMechanicId())
-                .services(repairOrderDto.getServices())
-                .build());
-        return RepairOrderDto.builder()
-                .repairOrderId(repairOrder.getRepairOrderId())
-                .description(repairOrder.getDescription())
-                .serviceDate(repairOrder.getServiceDate())
-                .customerId(repairOrder.getCustomerId())
-                .mechanicId(repairOrder.getMechanicId())
-                .services(repairOrder.getServices())
-                .build();
+        RepairOrder repairOrderEntity = repairOrderRepository.save(repairOrderMapper.toRepairOrderEntity(repairOrderDto));
+        return repairOrderMapper.toRepairOrderDto(repairOrderEntity);
     }
 
     public RepairOrderDto getRepairOrder(Integer id) {
         RepairOrder repairOrderEntity = repairOrderRepository.findById(id).get();
-        return RepairOrderDto.builder()
-                .repairOrderId(repairOrderEntity.getRepairOrderId())
-                .description(repairOrderEntity.getDescription())
-                .serviceDate(repairOrderEntity.getServiceDate())
-                .customerId(repairOrderEntity.getCustomerId())
-                .mechanicId(repairOrderEntity.getMechanicId())
-                .services(repairOrderEntity.getServices())
-                .build();
+        return repairOrderMapper.toRepairOrderDto(repairOrderEntity);
     }
 
     public RepairOrderDto updateRepairOrder(RepairOrderDto repairOrderDto) {
@@ -58,21 +42,14 @@ public class RepairOrderService {
                 repairOrderEntity.setCustomerId(repairOrderDto.getCustomerId());
             if (repairOrderDto.getMechanicId() != null)
                 repairOrderEntity.setMechanicId(repairOrderDto.getMechanicId());
-            if (!repairOrderDto.getServices().isEmpty()) {
+            if (!repairOrderDto.getServicesDto().isEmpty()) {
                 repairOrderEntity.getServices().clear();
-                repairOrderEntity.getServices().addAll(repairOrderDto.getServices());
+                repairOrderEntity.getServices().addAll(serviceMapper.toEntityList(repairOrderDto.getServicesDto()));
             }
 
             repairOrderRepository.save(repairOrderEntity);
         }
-        return RepairOrderDto.builder()
-                .repairOrderId(repairOrderEntity.getRepairOrderId())
-                .description(repairOrderEntity.getDescription())
-                .serviceDate(repairOrderEntity.getServiceDate())
-                .customerId(repairOrderEntity.getCustomerId())
-                .mechanicId(repairOrderEntity.getMechanicId())
-                .services(repairOrderEntity.getServices())
-                .build();
+        return repairOrderMapper.toRepairOrderDto(repairOrderEntity);
     }
 
     public void deleteRepairOrder(Integer id) {

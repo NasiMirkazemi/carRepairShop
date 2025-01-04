@@ -20,9 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -35,16 +32,10 @@ public class CustomerService {
     private final InvoiceMapper invoiceMapper;
 
     public CustomerDto addCustomer(CustomerDto customerDto) {
-        Customer customerEntity = Customer.builder()
-                .name(customerDto.getName())
-                .lastname(customerDto.getLastname())
-                .email(customerDto.getEmail())
-                .phone(customerDto.getPhone())
-                .address(customerDto.getAddress())
-                .build();
-        if (customerDto.getCars() != null && !customerDto.getCars().isEmpty()) {
+        Customer customerEntity =customerMapper.toCustomerEntity(customerDto);
+        if (customerDto.getCarsDto() != null && !customerDto.getCarsDto().isEmpty()) {
             List<Car> cars = new ArrayList<>();
-            for (CarDto carDto : customerDto.getCars()) {
+            for (CarDto carDto : customerDto.getCarsDto()) {
                 Car carEntity = carRepository.findById(carDto.getCarId()).orElse(null);
                 if (carEntity != null) {
                     carEntity.setCustomer(customerEntity);
@@ -81,9 +72,9 @@ public class CustomerService {
         customerEntity.setPhone(customerDto.getPhone() != null ? customerDto.getPhone() : customerEntity.getPhone());
         customerEntity.setAddress(customerDto.getAddress() != null ? customerDto.getAddress() : customerEntity.getAddress());
         //invoice List in Customer fields
-        if ( customerDto.getInvoiceDtos()!=null&&!customerDto.getInvoiceDtos().isEmpty()) {
+        if (customerDto.getInvoicesDto() != null && !customerDto.getInvoicesDto().isEmpty()) {
             List<Invoice> invoiceList = new ArrayList<>();
-            for (InvoiceDto invoiceDto : customerDto.getInvoiceDtos()) {
+            for (InvoiceDto invoiceDto : customerDto.getInvoicesDto()) {
                 Invoice invoiceEntity = invoiceRepository.findById(invoiceDto.getInvoiceId())
                         .orElseThrow(() -> new NotfoundException("Invoice not found whit id: " + invoiceDto.getInvoiceId()));
                 invoiceEntity.setCustomer(customerEntity);
@@ -92,9 +83,9 @@ public class CustomerService {
             customerEntity.setInvoices(invoiceList);
         }
         //cars list in Customer fields
-        if ( customerDto.getCars()!=null&&!customerDto.getCars().isEmpty()) {
+        if (customerDto.getCarsDto() != null && !customerDto.getCarsDto().isEmpty()) {
             List<Car> carList = new ArrayList<>();
-            for (CarDto carDto : customerDto.getCars()) {
+            for (CarDto carDto : customerDto.getCarsDto()) {
                 Car carEntity = carRepository.findById(carDto.getCarId())
                         .orElseThrow(() -> new NotfoundException("Car not found whit id: " + carDto.getCarId()));
                 carEntity.setCustomer(customerEntity);
@@ -116,19 +107,19 @@ public class CustomerService {
         customerEntity.setPhone(Optional.ofNullable(customerDto.getPhone()).orElse(customerEntity.getPhone()));
         customerEntity.setAddress(Optional.ofNullable(customerDto.getAddress()).orElse(customerEntity.getAddress()));
         //Mange cars list update
-        if (customerDto.getCars() != null) {//Get the  list of car  Ids
+        if (customerDto.getCarsDto() != null) {//Get the  list of car  Ids
             List<Car> carEntityList = customerEntity.getCars();
             //exist carIds in database
             List<Integer> carEntityListIds = carEntityList.stream().map(Car::getCarId).toList();
             //cars that are not in customerDto updated list
             List<Car> carsToRemove = carEntityList.stream()
-                    .filter(car -> customerDto.getCars().stream().noneMatch(carDto -> carDto.getCarId().equals(car.getCarId()))).toList();
+                    .filter(car -> customerDto.getCarsDto().stream().noneMatch(carDto -> carDto.getCarId().equals(car.getCarId()))).toList();
             customerEntity.getCars().removeAll(carsToRemove);
             for (Car car : carsToRemove) {
                 car.setCustomer(null);//unlinked the car from the customer
                 carRepository.save(car);
             }//map the updated list of CarDto to objects to Car Entity
-            List<Car> carsToAddOrUpdate = customerDto.getCars().stream()
+            List<Car> carsToAddOrUpdate = customerDto.getCarsDto().stream()
                     .map(carMapper::toCarEntity)//mapping each carDto into a car entity
                     .peek(car -> car.setCustomer(customerEntity))//this method adding side effect to processing of stream and sets the customer reference for each car
                     .toList();
@@ -139,18 +130,18 @@ public class CustomerService {
                 carRepository.save(car);
             }
         }
-        if (customerDto.getInvoiceDtos() != null) {
+        if (customerDto.getInvoicesDto() != null) {
             List<Invoice> invoiceEntityList = customerEntity.getInvoices();
             List<Integer> invoiceEntityListIds = invoiceEntityList.stream().map(Invoice::getInvoiceId).toList();
             List<Invoice> invoiceToRemove = invoiceEntityList.stream()
-                    .filter(invoice -> customerDto.getInvoiceDtos().stream().noneMatch(invoiceDto -> invoiceDto.getInvoiceId().equals(invoice.getInvoiceId())))
+                    .filter(invoice -> customerDto.getInvoicesDto().stream().noneMatch(invoiceDto -> invoiceDto.getInvoiceId().equals(invoice.getInvoiceId())))
                     .toList();
             customerEntity.getInvoices().removeAll(invoiceToRemove);
             for (Invoice invoice : invoiceToRemove) {
                 invoice.setCustomer(null);
                 invoiceRepository.save(invoice);
             }
-            List<Invoice> invoicesToAddOrUpdate = customerDto.getInvoiceDtos().stream()
+            List<Invoice> invoicesToAddOrUpdate = customerDto.getInvoicesDto().stream()
                     .map(invoiceMapper::toInvoiceEntity)
                     .peek(invoice -> invoice.setCustomer(customerEntity))
                     .toList();

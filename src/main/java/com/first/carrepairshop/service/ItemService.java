@@ -2,6 +2,7 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.dto.ItemDto;
 import com.first.carrepairshop.entity.Item;
+import com.first.carrepairshop.mapper.ItemMapper;
 import com.first.carrepairshop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,27 +13,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
     public ItemDto addItem(ItemDto itemDto) {
-        Item itemEntity = itemRepository.save(Item.builder()
-                .name(itemDto.getName())
-                .type(itemDto.getType())
-                .price(itemDto.getPrice())
-                .qualityLevel(itemDto.getQualityLevel())
-                .build());
+        Item itemEntity = itemRepository.save(itemMapper.toItemEntity(itemDto));
         itemDto.setItemId(itemEntity.getItemId());
         return itemDto;
     }
 
     public ItemDto getItem(Integer id) {
         Item itemEntity = itemRepository.findById(id).get();
-        return ItemDto.builder()
-                .itemId(itemEntity.getItemId())
-                .name(itemEntity.getName())
-                .type(itemEntity.getType())
-                .price(itemEntity.getPrice())
-                .qualityLevel(itemEntity.getQualityLevel())
-                .build();
+        return itemMapper.toItemDto(itemEntity);
     }
 
     public ItemDto updateItem(ItemDto itemDto) {
@@ -50,14 +41,7 @@ public class ItemService {
                 itemEntity.setQualityLevel(itemDto.getQualityLevel());
             itemRepository.save(itemEntity);
         }
-        return ItemDto.builder()
-                .itemId(itemEntity.getItemId())
-                .name(itemEntity.getName())
-                .type(itemEntity.getType())
-                .price(itemEntity.getPrice())
-                .qualityLevel(itemEntity.getQualityLevel())
-                .build();
-
+        return itemMapper.toItemDto(itemEntity);
     }
 
     public void deleteItem(Integer id) {

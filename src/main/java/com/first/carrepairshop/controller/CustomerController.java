@@ -2,16 +2,19 @@ package com.first.carrepairshop.controller;
 
 import com.first.carrepairshop.dto.CustomerDto;
 import com.first.carrepairshop.service.CustomerService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/customerController")
 public class CustomerController {
     private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDto customerDto) {

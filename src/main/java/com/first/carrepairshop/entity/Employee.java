@@ -9,8 +9,8 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Data
 @SuperBuilder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 
