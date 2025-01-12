@@ -19,7 +19,7 @@ public class Car {
     private Integer year;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "customer_id", nullable = true)//refers to the "cars" field in Customer
+    @JoinColumn(name = "customer_id",nullable = true)//refers to the "cars" field in Customer
     private Customer customer;
 
 

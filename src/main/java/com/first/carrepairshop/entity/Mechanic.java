@@ -1,5 +1,6 @@
 package com.first.carrepairshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,6 +28,7 @@ public class Mechanic extends Employee {
     @JoinTable(name = "mechanic_service",
             joinColumns = @JoinColumn(name = "mechanic_id"),
             inverseJoinColumns = @JoinColumn(name = "service_id"))
+    @JsonBackReference //used for json serialization prevent infinite recursion
     private List<Services> services = new ArrayList<>();
 
 }

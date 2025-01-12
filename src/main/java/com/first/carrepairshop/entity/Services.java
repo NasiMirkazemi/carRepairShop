@@ -1,5 +1,6 @@
 package com.first.carrepairshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,7 @@ public class Services {
     private ServiceStatus serviceStatus;//no fix, fix,under fixing
 
     @ManyToMany(mappedBy = "services")
+    @JsonManagedReference //used for json serialization prevent infinite recursion
     private List<Mechanic> mechanics = new ArrayList<>();
 
 }

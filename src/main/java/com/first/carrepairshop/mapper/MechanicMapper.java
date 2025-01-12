@@ -4,8 +4,8 @@ import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.entity.Mechanic;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,14 +13,24 @@ import java.util.List;
 public interface MechanicMapper {
     MechanicMapper INSTANCE = Mappers.getMapper(MechanicMapper.class);
 
-    @Mapping(target = "servicesDto", source = "services")
+    @Mapping(target = "servicesDto", ignore = true)
     MechanicDto toMechanicDto(Mechanic mechanic);
 
-    @Mapping(target = "services", source = "servicesDto")
+    @Named("toMechanicDtoWithoutServices")
+    @Mapping(target = "servicesDto", ignore = true)
+    MechanicDto toMechanicDtoWithoutServices(Mechanic mechanic);
+
+    @Mapping(target = "services", ignore = true)
     Mechanic toMechanicEntity(MechanicDto mechanicDto);
 
-    List<Mechanic> toEntityList(List<MechanicDto> mechanicsDto);
+    @Named("toMechanicEntityWithoutServices")
+    @Mapping(target = "services", ignore = true)
+    Mechanic toMechanicEntityWithoutServices(MechanicDto mechanicDto);
 
-    List<MechanicDto> toDtoList(List<Mechanic> mechanics);
+    List<MechanicDto> toMachanicDtoList(List<Mechanic> mechanics);
+
+    List<Mechanic> toMechanicEntityList(List<MechanicDto> mechanicsDto);
+
+
 }
 

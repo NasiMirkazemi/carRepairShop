@@ -1,8 +1,8 @@
 package com.first.carrepairshop.controller;
 
+import com.first.carrepairshop.dto.CarDto;
 import com.first.carrepairshop.dto.CustomerDto;
 import com.first.carrepairshop.service.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +28,18 @@ public class CustomerController {
 
     @PatchMapping("/update")
     public ResponseEntity<CustomerDto> updateCustomer(@RequestBody CustomerDto customerDto) {
-        return ResponseEntity.ok(customerService.updateCustomer(customerDto));
+        return ResponseEntity.ok(customerService.updateCustomer1(customerDto));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCustomer(@PathVariable("id") Integer id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.ok("customer whit id:" + id + "is deleted");
+    }
+
+    @PostMapping("/addCar/{customerId}")
+    public ResponseEntity<CarDto> addCar(@PathVariable("customerId") Integer customerId, @RequestBody CarDto carDto) {
+        return ResponseEntity.ok(customerService.addCarToCustomer(customerId, carDto));
     }
 
 }

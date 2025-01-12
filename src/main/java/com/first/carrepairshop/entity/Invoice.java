@@ -20,11 +20,11 @@ import java.util.List;
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer invoiceId;
+    private Integer   invoiceId;
     private LocalDate invoiceDate;
-    private Integer invoiceNumber;
-    private Integer carId;
-    private Integer totalAmount;
+    private Integer   invoiceNumber;
+    private Integer   carId;
+    private Integer   totalAmount;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

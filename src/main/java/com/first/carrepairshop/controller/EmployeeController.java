@@ -1,9 +1,7 @@
 package com.first.carrepairshop.controller;
 
 import com.first.carrepairshop.dto.EmployeeDto;
-import com.first.carrepairshop.entity.Employee;
 import com.first.carrepairshop.service.EmployeeService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

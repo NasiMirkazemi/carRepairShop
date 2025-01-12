@@ -6,7 +6,6 @@ import com.first.carrepairshop.dto.InvoiceDto;
 import com.first.carrepairshop.entity.Car;
 import com.first.carrepairshop.entity.Customer;
 import com.first.carrepairshop.entity.Invoice;
-import com.first.carrepairshop.exception.CarNotfoundException;
 import com.first.carrepairshop.exception.NotfoundException;
 import com.first.carrepairshop.mapper.CarMapper;
 import com.first.carrepairshop.mapper.CustomerMapper;
@@ -32,7 +31,7 @@ public class CustomerService {
     private final InvoiceMapper invoiceMapper;
 
     public CustomerDto addCustomer(CustomerDto customerDto) {
-        Customer customerEntity =customerMapper.toCustomerEntity(customerDto);
+        Customer customerEntity = customerMapper.toCustomerEntity(customerDto);
         if (customerDto.getCarsDto() != null && !customerDto.getCarsDto().isEmpty()) {
             List<Car> cars = new ArrayList<>();
             for (CarDto carDto : customerDto.getCarsDto()) {
@@ -41,17 +40,17 @@ public class CustomerService {
                     carEntity.setCustomer(customerEntity);
                     cars.add(carEntity);
                 } else {
-                    throw new CarNotfoundException("cars whit " + carDto.getCarId() + " not found");
+                    Car carCurrentlyAdded = carRepository.save(carMapper.toCarEntity(carDto));
+                    carCurrentlyAdded.setCustomer(customerEntity);
+                    cars.add(carCurrentlyAdded);
+
+
                 }
                 customerEntity.setCars(cars);
             }
-            customerRepository.save(customerEntity);
-            if (customerEntity.getCars() != null) {
-                for (Car car : customerEntity.getCars()) {
-                    carRepository.save(car);
-                }
-            }
+
         }
+        customerRepository.save(customerEntity);
         return customerMapper.toCustomerDto(customerEntity);
     }
 
@@ -107,18 +106,19 @@ public class CustomerService {
         customerEntity.setPhone(Optional.ofNullable(customerDto.getPhone()).orElse(customerEntity.getPhone()));
         customerEntity.setAddress(Optional.ofNullable(customerDto.getAddress()).orElse(customerEntity.getAddress()));
         //Mange cars list update
-        if (customerDto.getCarsDto() != null) {//Get the  list of car  Ids
+        if (customerDto.getCarsDto() != null && !customerDto.getCarsDto().isEmpty()) {//Get the  list of car  Ids
             List<Car> carEntityList = customerEntity.getCars();
             //exist carIds in database
             List<Integer> carEntityListIds = carEntityList.stream().map(Car::getCarId).toList();
             //cars that are not in customerDto updated list
             List<Car> carsToRemove = carEntityList.stream()
                     .filter(car -> customerDto.getCarsDto().stream().noneMatch(carDto -> carDto.getCarId().equals(car.getCarId()))).toList();
-            customerEntity.getCars().removeAll(carsToRemove);
             for (Car car : carsToRemove) {
                 car.setCustomer(null);//unlinked the car from the customer
                 carRepository.save(car);
-            }//map the updated list of CarDto to objects to Car Entity
+            }
+            customerEntity.getCars().removeAll(carsToRemove);
+            //map the updated list of CarDto to objects to Car Entity
             List<Car> carsToAddOrUpdate = customerDto.getCarsDto().stream()
                     .map(carMapper::toCarEntity)//mapping each carDto into a car entity
                     .peek(car -> car.setCustomer(customerEntity))//this method adding side effect to processing of stream and sets the customer reference for each car
@@ -156,9 +156,28 @@ public class CustomerService {
 
     }
 
-
     public void deleteCustomer(Integer id) {
         customerRepository.deleteById(id);
+    }
+
+    public CarDto addCarToCustomer(Integer customerId, CarDto carDto) {
+        Customer customerEntity = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotfoundException("Customer not found whit id: " + customerId));
+        Car retriveCar = carRepository.findById(carDto.getCarId()).orElse(null);
+        Car carEntity = carMapper.toCarEntity(carDto);
+        List<Car> cars = customerEntity.getCars();
+        if (retriveCar != null) {
+            cars.add(retriveCar);
+            retriveCar.setCustomer(customerEntity);
+            customerEntity.setCars(cars);
+        } else {
+            carRepository.save(carEntity);
+            cars.add(carEntity);
+            carEntity.setCustomer(customerEntity);
+            customerEntity.setCars(cars);
+        }
+        customerRepository.save(customerEntity);
+        return carMapper.toCarDto(carEntity);
     }
 
 }

@@ -2,25 +2,21 @@ package com.first.carrepairshop.controller;
 
 import com.first.carrepairshop.dto.MechanicDto;
 import com.first.carrepairshop.service.MechanicService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mechanicController")
-//@RequiredArgsConstructor
 
 public class MechanicController {
     private final MechanicService mechanicService;
+    @Autowired
 
-    public MechanicController(MechanicService mechanicService) {
+    public MechanicController( @Lazy MechanicService mechanicService) {
         this.mechanicService = mechanicService;
     }
-
 
     @PostMapping("/add")
     public ResponseEntity<MechanicDto> addMechanic(@RequestBody MechanicDto mechanicDto) {

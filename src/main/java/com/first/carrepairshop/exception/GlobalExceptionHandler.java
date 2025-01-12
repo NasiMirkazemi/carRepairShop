@@ -12,6 +12,6 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(CarNotfoundException.class)
     public ResponseEntity<?>handlerCarNotFoundException(CarNotfoundException CarNotfoundException){
-        return ResponseEntity.ok("error"+CarNotfoundException.getMessage());
+        return ResponseEntity.ok("error: "+CarNotfoundException.getMessage());
     }
 }

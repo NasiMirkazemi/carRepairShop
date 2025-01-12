@@ -2,14 +2,12 @@ package com.first.carrepairshop.service;
 
 import com.first.carrepairshop.dto.RepairOrderDto;
 import com.first.carrepairshop.entity.RepairOrder;
-import com.first.carrepairshop.entity.Services;
 import com.first.carrepairshop.mapper.RepairOrderMapper;
 import com.first.carrepairshop.mapper.ServiceMapper;
 import com.first.carrepairshop.repository.RepairOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +16,7 @@ public class RepairOrderService {
     private final RepairOrderRepository repairOrderRepository;
     private final RepairOrderMapper repairOrderMapper;
     private final ServiceMapper serviceMapper;
+
 
     public RepairOrderDto addRepairOrder(RepairOrderDto repairOrderDto) {
         RepairOrder repairOrderEntity = repairOrderRepository.save(repairOrderMapper.toRepairOrderEntity(repairOrderDto));
@@ -44,7 +43,7 @@ public class RepairOrderService {
                 repairOrderEntity.setMechanicId(repairOrderDto.getMechanicId());
             if (!repairOrderDto.getServicesDto().isEmpty()) {
                 repairOrderEntity.getServices().clear();
-                repairOrderEntity.getServices().addAll(serviceMapper.toEntityList(repairOrderDto.getServicesDto()));
+                repairOrderEntity.getServices().addAll(serviceMapper.toServiceEntityList(repairOrderDto.getServicesDto()));
             }
 
             repairOrderRepository.save(repairOrderEntity);

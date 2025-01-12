@@ -11,19 +11,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.first.carrepairshop.entity.Services.*;
-
 @Service
+@RequiredArgsConstructor
 public class ServicesService {
     private final ServicesRepository servicesRepository;
     private final ServiceMapper serviceMapper;
     private final MechanicMapper mechanicMapper;
 
-    public ServicesService(ServicesRepository servicesRepository, ServiceMapper serviceMapper, MechanicMapper mechanicMapper) {
-        this.servicesRepository = servicesRepository;
-        this.serviceMapper = serviceMapper;
-        this.mechanicMapper = mechanicMapper;
-    }
 
     public ServicesDto addService(ServicesDto servicesDto) {
         Services service = servicesRepository.save(serviceMapper.toServiceEntity(servicesDto));
@@ -53,17 +47,25 @@ public class ServicesService {
                 serviceEntity.setScheduledTime(servicesDto.getScheduledTime());
             if (servicesDto.getServiceStatus() != null)
                 serviceEntity.setServiceStatus(servicesDto.getServiceStatus());
-            if (servicesDto.getMechanicsDto() != null)
-                serviceEntity.setMechanics(mechanicMapper.toEntityList(servicesDto.getMechanicsDto()));
-
+            if (!servicesDto.getMechanicsDto().isEmpty()) {
+                serviceEntity.getMechanics().clear();
+                serviceEntity.setMechanics(mechanicMapper.toMechanicEntityList(servicesDto.getMechanicsDto()));
+            }
+            servicesRepository.save(serviceEntity);
         }
         return serviceMapper.toServicesDto(serviceEntity);
-
-
     }
 
     public void deleteService(Integer id) {
         servicesRepository.deleteById(id);
         System.out.println("service " + id + "deleted");
+
+    }
+
+    public ServicesDto getServices(Integer id) {
+        Services services = servicesRepository.findById(id).orElseThrow(() -> new NotfoundException("Service not found"));
+        ServicesDto servicesDto = serviceMapper.toServicesDto(services);
+        servicesDto.setMechanicsDto(mechanicMapper.toMachanicDtoList(services.getMechanics()));
+        return serviceMapper.toServicesDto(services);
     }
 }

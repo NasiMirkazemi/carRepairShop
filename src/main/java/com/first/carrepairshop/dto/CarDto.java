@@ -1,12 +1,10 @@
 package com.first.carrepairshop.dto;
 
-import com.first.carrepairshop.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
 
 
 @Builder
