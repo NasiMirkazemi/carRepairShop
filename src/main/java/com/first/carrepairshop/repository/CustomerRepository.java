@@ -8,11 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     Customer findByPhone(String phone);
+     Optional<Customer> findCustomerByName(String name);
 
     @Transactional
     @Modifying

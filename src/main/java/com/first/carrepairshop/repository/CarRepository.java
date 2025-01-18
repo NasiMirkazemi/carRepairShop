@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Integer> {
-    Car findByNumberPlate(Long numberPlate);
+    Optional<Car> findByNumberPlate(Long numberPlate);
 
     Car findByModel(String model);
 

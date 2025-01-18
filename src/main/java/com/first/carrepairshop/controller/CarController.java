@@ -1,6 +1,7 @@
 package com.first.carrepairshop.controller;
 
 import com.first.carrepairshop.dto.CarDto;
+import com.first.carrepairshop.dto.CustomerDto;
 import com.first.carrepairshop.service.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,12 @@ public class CarController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCar(@PathVariable("id") Integer id) {
         carService.deleteCar(id);
-        return ResponseEntity.ok("cars whit id" +id+ "is deleted");
+        return ResponseEntity.ok("cars whit id :" + id + "is deleted");
+    }
+
+    @PostMapping("/addCustomerToCar/{carId}")
+    public ResponseEntity<String> addCustomerToCar(@PathVariable("carId") Integer carId, @RequestBody CustomerDto customerDto) {
+        carService.addCustomerToCar(carId, customerDto);
+        return ResponseEntity.ok("customer whit id:" + customerDto.getName() + " is added to car whit id:" + carId);
     }
 }

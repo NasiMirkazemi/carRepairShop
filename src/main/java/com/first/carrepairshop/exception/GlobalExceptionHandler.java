@@ -11,7 +11,12 @@ public class GlobalExceptionHandler {
          return ResponseEntity.ok("error: " + notfoundException.getMessage());
     }
     @ExceptionHandler(CarNotfoundException.class)
-    public ResponseEntity<?>handlerCarNotFoundException(CarNotfoundException CarNotfoundException){
-        return ResponseEntity.ok("error: "+CarNotfoundException.getMessage());
+    public ResponseEntity<?>handlerCarNotFoundException(CarNotfoundException carNotfoundException){
+        return ResponseEntity.ok("error: "+carNotfoundException.getMessage());
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handlerIllegalException(IllegalArgumentException illegalArgumentException){
+        return ResponseEntity.ok("error: "+illegalArgumentException.getMessage());
     }
 }
+
