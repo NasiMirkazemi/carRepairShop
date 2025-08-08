@@ -5,12 +5,13 @@ server:
 
 ---
 spring:
+  application:
+    name: carRepairShop
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,4 +19,65 @@ spring:
     properties:
       hibernate:
         format_sql: ture
-    show-sql: true
+    show-sql:
+      true data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+
+  mail:
+    host: smtp.yandex.com
+    port: 465
+    username: nazimirkazemi@yandex.com
+    password: nvqvnmaeclcdyscd
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+          ssl:
+            enable: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: core-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    topic:
+      assignment-new: assignment.new
+
+  logging:
+    level:
+      root: INFO
+
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{36} - %msg%n"
+      file: "%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{36} - %msg%n"
+
+    file:
+      name: logs/application.log
+
+    logback:
+      rolling policy:
+        max-file-size: 10MB
+        max-history: 30
+        file-name-pattern: logs/application-%d{yyyy-MM-dd}.%i.log
+jwt:
+  secret: carCar-autoAuto-$%&?-key-123456789
+  refresh:
+    token:
+      expiry: 86400000   # 7 days in milliseconds
+logging:
+  level:
+    org.springframework.messaging.simp: DEBUG
+    org.springframework.web.socket: DEBUG
+    org.springframework.web.socket.messaging: DEBUG
