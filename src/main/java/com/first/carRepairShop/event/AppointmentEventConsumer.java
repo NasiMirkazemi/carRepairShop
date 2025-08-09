@@ -6,6 +6,7 @@ import com.first.carRepairShop.exception.NotFoundException;
 import com.first.carRepairShop.repository.CustomerRepository;
 import com.first.carRepairShop.services.impl.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class AppointmentEventConsumer {
     private final CustomerRepository customerRepository;
     private final NotificationService notificationService;
 
+    @KafkaListener(topics = "appointment-confirmed-topic")
     public void consumeEvent(AppointmentConfirmEvent event) {
         Customer customer = customerRepository.findById(event.getCustomerId())
                 .orElseThrow(() -> new NotFoundException("No Customer found whit this id:" + event.getCustomerId()));
